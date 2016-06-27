@@ -18,7 +18,7 @@ function CMD.init (w, c)
 end
 
 function CMD.character_enter (_, agent, character)
-	syslog.noticef ("--- CMD.character_enter, character(%d) loading map", character)
+	syslog.noticef ("--- CMD.character_enter, character:%d: loading map", character)
 
 	pending_character[agent] = character
 	skynet.call (agent, "lua", "map_enter", skynet.self ())
@@ -52,6 +52,7 @@ function CMD.character_ready (agent, pos)
 end
 
 function CMD.move_blink (agent, pos)
+    syslog.debugf ("--- move_blink, agent:%d move to(%d, %d)", agent, pos.x, pos.z)
 	local ok, add, update, remove = aoi.update (agent, pos)
 	if not ok then return end
 	skynet.call (agent, "lua", "aoi_manage", add, remove, update, "move")

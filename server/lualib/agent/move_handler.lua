@@ -16,6 +16,8 @@ end)
 function REQUEST.move (args)
 	assert (args and args.pos)
 
+    syslog.debugf ("--- agent:%d, move to (x:%d, z:%d)", skynet.self(), args.pos.x, args.pos.z)
+
 	local npos = args.pos
 	local opos = user.character.movement.pos
 	for k, v in pairs (opos) do
@@ -24,8 +26,8 @@ function REQUEST.move (args)
 		end
 	end
 	user.character.movement.pos = npos
-	
-	local ok = skynet.call (user.map, "lua", "move_blink", npos) 
+
+	local ok = skynet.call (user.map, "lua", "move_blink", npos)
 	if not ok then
 		user.character.movement.pos = opos
 		error ()

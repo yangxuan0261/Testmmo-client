@@ -25,33 +25,34 @@ local function load_list (account)
 	if list then
 		list = dbpacker.unpack (list)
 	else
-        print("--- load_list, list is empty")
+        syslog.debugf ("--- load_list, account:%d doesn't any character in database", account)
 		list = {}
 	end
 	return list
 end
 
-local function check_character (account, id)
-	print ("--- check_character", account, id)
+local function check_character (account, id) -- 这个用户是否存在这个角色id
+    syslog.debugf ("--- check_character, account:%d characterId:%d", account, id)
 	local list = load_list (account)
 	for _, v in pairs (list) do
-		print ("list", v)
 		if v == id then return true end
 	end
 	return false
 end
 
 function REQUEST.character_list ()
-    print("--- REQUEST.character_list, account:"..user.account)
+    local ids = ""
 	local list = load_list (user.account)
 	local character = {}
 	for _, id in pairs (list) do
-        print("---- REQUEST.character_list, ", user.account, id )
 		local c = skynet.call (database, "lua", "character", "load", id)
 		if c then
+            ids = ids..id..", "
 			character[id] = dbpacker.unpack (c)
 		end
 	end
+    syslog.debugf ("--- character_list, account:%d all characterId:%s", user.account, ids)
+
 	return { character = character }
 end
 
@@ -62,13 +63,13 @@ local function create (name, race, class)
 
 	local r = gdd.race[race] or error ()
 
-	local character = { 
+	local character = {
 		general = {
 			name = name,
 			race = race,
 			class = class,
 			map = r.home,
-		}, 
+		},
 		attribute = {
 			level = 1,
 			exp = 0,
@@ -147,7 +148,7 @@ function handler.init (character)
 	base.strength = gda.strength[race][level]
 	base.stamina = gda.stamina[race][level]
 	base.attack_power = 0
-	
+
 	local last = temp_attribute[attribute_count - 1]
 	local final = temp_attribute[attribute_count]
 

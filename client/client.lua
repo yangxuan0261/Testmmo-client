@@ -259,9 +259,10 @@ function CmdParser( cmdStr )
         }
 
     elseif cmd == "pick" then
+        cmd = "character_pick"
         local ids = {
-            [1] = 3149323469594823681,
-            [2] = 3149323823929624577
+            [1] = 3150005647840380929,
+            [2] = 3150005772394434561
         }
         argTab = { id = ids[tonumber(strTab[2])] }
 
@@ -269,15 +270,17 @@ function CmdParser( cmdStr )
         cmd = "character_list"
 
     elseif cmd == "move" then
-        argTab = {
-            x = tonumber(strTab[2]),
-            y = tonumber(strTab[3])
+        argTab = { pos = {
+                x = tonumber(strTab[2]),
+                z = tonumber(strTab[3])
+            }
         }
 
     elseif cmd == "enter" then
         cmd = "map_ready"
 
     elseif cmd == "atk" then
+        cmd = "combat"
         argTab = { target = tonumber(strTab[2]) }
 
     end

@@ -118,7 +118,7 @@ local function aoi_update_response (id, scope)
 
     print("~~~ debug, "..debug.traceback())
 	mark_flag (id, scope, "wantmore", true)
-	refresh_aoi (id, scope)	
+	refresh_aoi (id, scope)
 end
 
 local function aoi_add (list)
@@ -191,14 +191,27 @@ end
 
 function CMD.aoi_manage (alist, rlist, ulist, scope)
 	if (alist or ulist) and character_writer then
-		character_writer:commit ()
+		character_writer:commit () -- 同步一次最新的数据到共享中心，坐等别人update刷新
 	end
 
-	aoi_add (alist)
-    for k,v in pairs(alist) do
-        print("-------- alist",k,v)
+    -- debug
+    if alist then
+        for k,v in pairs(alist) do
+            syslog.debugf ("--- aoi_manage, agent:%d add target:%d", skynet.self(), v)
+        end
+    end
+    if rlist then
+        for k,v in pairs(rlist) do
+            syslog.debugf ("--- aoi_manage, agent:%d remove target:%d", skynet.self(), v)
+        end
+    end
+    if ulist then
+        for k,v in pairs(ulist) do
+            syslog.debugf ("--- aoi_manage, agent:%d update target:%d", skynet.self(), v)
+        end
     end
 
+	aoi_add (alist)
 	aoi_remove (rlist)
 	aoi_update (ulist, scope)
 end
@@ -226,8 +239,8 @@ function RESPONSE.aoi_update_move (request, response)
     syslog.debugf ("@@@ response from client, RESPONSE.aoi_update_move")
     request.myflag = "aaa"
     response.myflag = "bbb"
-    dump(request)
-    dump(response)
+    -- dump(request)
+    -- dump(response)
 	if not response or not response.wantmore then return end
 	aoi_update_response (request.character.id, "move")
 end
@@ -236,8 +249,8 @@ function RESPONSE.aoi_update_attribute (request, response)
     syslog.debugf ("~~~ RESPONSE.aoi_update_attribute")
     request.myflag = "ccc"
     response.myflag = "ddd"
-    dump(request)
-    dump(response)
+    -- dump(request)
+    -- dump(response)
 	if not response or not response.wantmore then return end
 	aoi_update_response (request.character.id, "attribute")
 end

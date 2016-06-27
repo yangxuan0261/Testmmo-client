@@ -73,7 +73,7 @@ local function handle_request (name, args, response)
         syslog.debugf ("^^^@ request from client, exe func:%s", name)
 		local ok, ret = xpcall (f, traceback, args)
 		if not ok then
-			syslog.warningf ("handle message(%s) failed : %s", name, ret) 
+			syslog.warningf ("handle message(%s) failed : %s", name, ret)
 			kick_self ()
 		else
 			last_heartbeat_time = skynet.now () -- 每次收到客户端端请求，重新计时心跳时间
@@ -106,7 +106,7 @@ local function handle_response (id, args)
     syslog.debug ("^^^# response from client, exe func:%s", s.name)
 	local ok, ret = xpcall (f, traceback, s.args, args)
 	if not ok then
-		syslog.warningf ("handle response(%d-%s) failed : %s", id, s.name, ret) 
+		syslog.warningf ("handle response(%d-%s) failed : %s", id, s.name, ret)
 		kick_self ()
 	end
 end
@@ -123,7 +123,7 @@ skynet.register_protocol {
 		elseif type == "RESPONSE" then
 			handle_response (...)
 		else
-			syslog.warningf ("invalid message type : %s", type) 
+			syslog.warningf ("invalid message type : %s", type)
 			kick_self ()
 		end
 	end,
@@ -135,8 +135,8 @@ function CMD.open (fd, account)
 	local name = string.format ("agent:%d", account)
 	syslog.debug ("-------- agent opened:"..account)
 
-	user = { 
-		fd = fd, 
+	user = {
+		fd = fd,
 		account = account,
 		REQUEST = {},
 		RESPONSE = {},
@@ -146,7 +146,7 @@ function CMD.open (fd, account)
 	user_fd = user.fd
 	REQUEST = user.REQUEST
 	RESPONSE = user.RESPONSE
-	
+
     character_handler:register (user)
 
 	last_heartbeat_time = skynet.now () -- 开启心跳
@@ -155,7 +155,7 @@ end
 
 function CMD.close ()
 	syslog.debugf ("agent closed")
-	
+
 	local account
 	if user then
 		account = user.account
@@ -219,13 +219,13 @@ skynet.start (function ()
 	skynet.dispatch ("lua", function (_, _, command, ...)
 		local f = CMD[command]
 		if not f then
-			syslog.warningf ("unhandled message(%s)", command) 
+			syslog.warningf ("unhandled message(%s)", command)
 			return skynet.ret ()
 		end
 
 		local ok, ret = xpcall (f, traceback, ...)
 		if not ok then
-			syslog.warningf ("handle message(%s) failed : %s", command, ret) 
+			syslog.warningf ("handle message(%s) failed : %s", command, ret)
 			kick_self ()
 			return skynet.ret ()
 		end
