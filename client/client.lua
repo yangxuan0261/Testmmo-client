@@ -74,6 +74,8 @@ local function unpack (text)
 		return nil, text
 	end
 	local s = text:byte (1) * 256 + text:byte (2)
+    print("--- s", size, s)--- s    201 199
+
 	if size < s + 2 then
 		return nil, text
 	end
@@ -259,9 +261,10 @@ function CmdParser( cmdStr )
         }
 
     elseif cmd == "pick" then
+        cmd = "character_pick"
         local ids = {
             [1] = 3149323469594823681,
-            [2] = 3149323823929624577
+            [2] = 3151658778605126657
         }
         argTab = { id = ids[tonumber(strTab[2])] }
 
@@ -270,8 +273,10 @@ function CmdParser( cmdStr )
 
     elseif cmd == "move" then
         argTab = {
-            x = tonumber(strTab[2]),
-            y = tonumber(strTab[3])
+            pos = {
+                x = tonumber(strTab[2]),
+                y = tonumber(strTab[3])
+            }
         }
 
     elseif cmd == "enter" then

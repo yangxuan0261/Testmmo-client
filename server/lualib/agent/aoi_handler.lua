@@ -197,8 +197,22 @@ function CMD.aoi_manage (alist, rlist, ulist, scope)
 		character_writer:commit () --
 	end
 
-    for k,v in pairs(alist) do
-        print("-------- alist",k,v)
+    if alist then
+        for _,v in pairs(alist) do
+            syslog.debugf ("--- aoi_manage, add list:%d", v)
+        end
+    end
+
+    if rlist then
+        for _,v in pairs(rlist) do
+            syslog.debugf ("--- aoi_manage, remove list:%d", v)
+        end
+    end
+
+    if ulist then
+        for _,v in pairs(ulist) do
+            syslog.debugf ("--- aoi_manage, update list:%d", v)
+        end
     end
 
 	aoi_add (alist)

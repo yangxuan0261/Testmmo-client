@@ -52,6 +52,7 @@ end
 
 local function send_msg (fd, msg)
 	local package = string.pack (">s2", msg)
+    syslog.debugf ("--- send_msg to client:%d, msg len:%d", fd, #package)
 	socket.write (fd, package)
 end
 
@@ -73,6 +74,8 @@ function CMD.auth (fd, addr)
 	if name == "handshake" then
 		assert (args and args.name and args.client_pub, "invalid handshake request")
 
+        syslog.debugf ("--- handshake, username:%s", args.name)
+ 
 		local account = skynet.call (database, "lua", "account", "load", args.name) or error ("load account " .. args.name .. " failed")
 
 		local session_key, _, pkey = srp.create_server_session_key (account.verifier, args.client_pub)

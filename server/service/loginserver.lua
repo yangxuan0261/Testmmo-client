@@ -31,7 +31,7 @@ function CMD.open (conf)
 		local s = slave[balance]
 		balance = balance + 1
 		if balance > nslave then balance = 1 end
-
+            syslog.debugf ("---@ loginslave, connection %d from %s, balance:%d", fd, addr, balance)
 		skynet.call (s, "lua", "auth", fd, addr)
 	end)
 end
