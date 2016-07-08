@@ -183,6 +183,16 @@ aoi_update_attribute 3 {
 		wantmore 0 : boolean
 	}
 }
+
+test2 4 {
+    request {
+        cat 0 : string
+    }
+    response {
+        dog 0 : string
+    }
+}
+
 ]]
 
 game_proto.types = sparser.parse (types)

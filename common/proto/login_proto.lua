@@ -41,6 +41,8 @@ challenge 3 {
 	response {
 		token 0 : string		# login token
 		challenge 1 : string		# next token challenge
+        ip 2 : string   # gameserver ip
+        port 3 : integer   # gameserver port
 	}
 }
 

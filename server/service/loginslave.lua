@@ -125,6 +125,8 @@ function CMD.auth (fd, addr)
 	local msg = response {
 			token = token,
 			challenge = challenge,
+            ip = "192.168.253.130", -- 暂时写死，for test
+            port = 9555,
 	}
 	send_msg (fd, msg)
 

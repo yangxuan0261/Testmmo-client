@@ -103,7 +103,7 @@ local function handle_response (id, args)
 		return
 	end
 
-    syslog.debug ("^^^# response from client, exe func:%s", s.name)
+    syslog.debugf ("^^^# response from client, exe func:%s", s.name)
 	local ok, ret = xpcall (f, traceback, s.args, args) 
 	if not ok then
 		syslog.warningf ("handle response(%d-%s) failed : %s", id, s.name, ret) 
