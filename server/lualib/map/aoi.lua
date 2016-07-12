@@ -62,7 +62,7 @@ end
 
 function aoi.update (id, pos)
 	local c = object[id]
-    dump(object)
+    -- dump(object)
 
     syslog.debugf ("agent:%s, x:%d, y:%d, z:%d", id, pos.x, pos.y, pos.z)
 	if not c then

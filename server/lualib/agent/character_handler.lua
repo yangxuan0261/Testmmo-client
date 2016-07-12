@@ -5,6 +5,7 @@ local syslog = require "syslog"
 local dbpacker = require "db.packer"
 local handler = require "agent.handler"
 local uuid = require "uuid"
+local dump = require "print_r"
 
 
 local REQUEST = {}
@@ -98,6 +99,8 @@ function REQUEST.character_create (args)
 	json = dbpacker.pack (list)
 	skynet.call (database, "lua", "character", "savelist", user.account, json)
 
+    syslog.debugf("--- create character success:%d", id)
+    dump(character)
 	return { character = character }
 end
 

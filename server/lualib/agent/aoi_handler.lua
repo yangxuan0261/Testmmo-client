@@ -39,6 +39,7 @@ local function send_self (scope) -- 下行给客户端对应属性
 	if flag.dirty and flag.wantmore then
 		flag.dirty = false
 		flag.wantmore = false
+        syslog.debugf("--- send_self, scope:%s", scope)
 		user.send_request (scope2proto[scope], { character = user.character })
 	end
 end
@@ -144,6 +145,9 @@ end
 local function aoi_update (list, scope) -- 更新aoi范围内的属性
 	if not list then return end
 
+    syslog.debugf("--- aoi_update, self:%d, scope:%s", skynet.self(), scope)
+    dump(list)
+
 	self_flag[scope].dirty = true -- 属性标记为脏数据
 	send_self (scope) -- 下行给自己的客户端
 
@@ -241,16 +245,12 @@ end
 
 function RESPONSE.aoi_update_move (request, response)
     syslog.debugf ("@@@ response from client, RESPONSE.aoi_update_move")
-    request.myflag = "aaa"
-    response.myflag = "bbb"
 	if not response or not response.wantmore then return end
 	aoi_update_response (request.character.id, "move")
 end
 
 function RESPONSE.aoi_update_attribute (request, response)
     syslog.debugf ("~~~ RESPONSE.aoi_update_attribute")
-    request.myflag = "ccc"
-    response.myflag = "ddd"
 	if not response or not response.wantmore then return end
 	aoi_update_response (request.character.id, "attribute")
 end

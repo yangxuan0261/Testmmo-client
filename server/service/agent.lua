@@ -39,6 +39,7 @@ local user_fd
 local session = {}
 local session_id = 0
 local function send_request (name, args)
+    syslog.debugf ("--- 【S>>C】, send_request: %s", name)
 	session_id = session_id + 1
 	local str = proto_request (name, args, session_id)
 	send_msg (user_fd, str)
@@ -70,7 +71,7 @@ local REQUEST -- 在各个handler中各种定义处理，模块化，但必须�
 local function handle_request (name, args, response)
 	local f = REQUEST[name]
 	if f then
-        syslog.debugf ("^^^@ request from client, exe func:%s", name)
+        syslog.debugf ("--- 【C>>S】, request from client: %s", name)
 		local ok, ret = xpcall (f, traceback, args)
 		if not ok then
 			syslog.warningf ("handle message(%s) failed : %s", name, ret) 
@@ -91,7 +92,7 @@ local RESPONSE
 local function handle_response (id, args)
 	local s = session[id] -- 检查是否存在此次会话
 	if not s then
-		syslog.warningf ("session %d not found", id)
+		syslog.warningf ("Error, session %d not found", id)
 		kick_self ()
 		return
 	end
@@ -99,15 +100,15 @@ local function handle_response (id, args)
 	local f = RESPONSE[s.name] -- 检查是否存在user.send_request("aaa", xxx)中对应的响应方法 RESPONSE.aaa
 	if not f then
 		syslog.warningf ("unhandled response : %s", s.name)
-		kick_self () -- 不存在则踢下线，因为可能会话被篡改
+		-- kick_self () -- 不存在则踢下线，因为可能会话被篡改
 		return
 	end
 
-    syslog.debugf ("^^^# response from client, exe func:%s", s.name)
+    syslog.debugf ("--- 【C>>S】, response from client: %s", s.name)
 	local ok, ret = xpcall (f, traceback, s.args, args) 
 	if not ok then
 		syslog.warningf ("handle response(%d-%s) failed : %s", id, s.name, ret) 
-		kick_self ()
+		-- kick_self ()
 	end
 end
 

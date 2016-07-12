@@ -45,7 +45,10 @@ function CMD.character_ready (agent, pos)
 	syslog.noticef ("--- agent:%d, character:%d enter map", agent, online_character[agent])
 
 	local ok, list = aoi.insert (agent, pos) -- 返回我的视野列表
-	if not ok then return false end
+	if not ok then 
+        syslog.debugf ("--- aoi.insert, not ok")
+        return false 
+    end
 
 	skynet.call (agent, "lua", "aoi_manage", list)
 	return true
