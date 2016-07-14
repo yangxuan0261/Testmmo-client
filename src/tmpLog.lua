@@ -1,0 +1,49 @@
+ - "<var>" = {
+ -     "attribute" = {
+ -         "attack_power" = 22
+ -         "exp"          = 0
+ -         "health"       = 130
+ -         "health_max"   = 130
+ -         "level"        = 1
+ -         "stamina"      = 21
+ -         "strength"     = 22
+ -     }
+ -     "general" = {
+ -         "class" = "warrior"
+ -         "map"   = "Stormwind City"
+ -         "name"  = "actor1"
+ -         "race"  = "human"
+ -     }
+ -     "id"        = 3152259373946897409
+ -     "movement" = {
+ -         "pos" = {
+ -             "o" = 180
+ -             "x" = 100
+ -             "y" = 10
+ -             "z" = 100
+ -         }
+ -     }
+
+ ----------- aoi add
+ - "<var>" = {
+-     "attribute" = {
+-         "health"     = 130
+-         "health_max" = 130
+-         "level"      = 1
+-     }
+-     "general" = {
+-         "class" = "warrior"
+-         "map"   = "Stormwind City"
+-         "name"  = "cat3"
+-         "race"  = "human"
+-     }
+-     "id"        = 3153541967145600001
+-     "movement" = {
+-         "pos" = {
+-             "o" = 4
+-             "x" = 39
+-             "y" = 34
+-             "z" = 3
+-         }
+-     }
+- }
