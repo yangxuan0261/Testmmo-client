@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<UIProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProjectDir>G:\workplace_cocos\TestSky\uiProj\DemoHead_UI</ProjectDir>
+  <Version>1.6.0.0</Version>
+  <Resources>G:\workplace_cocos\TestSky\uiProj\DemoHead_UI\Resources</Resources>
+  <Name>ui</Name>
+  <JsonFileName>ui.json</JsonFileName>
+  <JsonFolder>G:\workplace_cocos\TestSky\uiProj\DemoHead_UI\Json</JsonFolder>
+  <JsonList>
+    <string>DemoHead_UI.json</string>
+  </JsonList>
+  <CanvasSize>
+    <Width>480</Width>
+    <Height>320</Height>
+  </CanvasSize>
+  <filePath>G:\workplace_cocos\TestSky\uiProj\DemoHead_UI\DemoHead_UI.xml.ui</filePath>
+  <ProjectType>UIProject</ProjectType>
+  <ResRelativePath />
+  <imageFileList />
+  <imagePngList>
+    <string>BLOOD-1.png</string>
+    <string>hat01.png</string>
+    <string>hat.png</string>
+    <string>BLOOD-RED.png</string>
+    <string>BLOOD-BLUE.png</string>
+    <string>gun.png</string>
+  </imagePngList>
+  <JsonSuffix>.json</JsonSuffix>
+  <CurrentUIJson>DemoHead_UI.json</CurrentUIJson>
+</UIProject>

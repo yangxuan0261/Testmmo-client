@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<UIProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProjectDir>G:\workplace_cocos\TestSky\uiProj\DemoMap</ProjectDir>
+  <Version>1.6.0.0</Version>
+  <Resources>G:\workplace_cocos\TestSky\uiProj\DemoMap\Resources</Resources>
+  <Name>DemoMap</Name>
+  <JsonFileName>DemoMap.json</JsonFileName>
+  <JsonFolder>G:\workplace_cocos\TestSky\uiProj\DemoMap\Json</JsonFolder>
+  <JsonList>
+    <string>DemoMap.json</string>
+  </JsonList>
+  <CanvasSize>
+    <Width>960</Width>
+    <Height>640</Height>
+  </CanvasSize>
+  <filePath>G:\workplace_cocos\TestSky\uiProj\DemoMap\DemoMap.xml.ui</filePath>
+  <ProjectType>UIProject</ProjectType>
+  <ResRelativePath />
+  <imageFileList />
+  <imagePngList>
+    <string>button1.png</string>
+    <string>button2.png</string>
+    <string>alert_bg.png</string>
+    <string>map.png</string>
+  </imagePngList>
+  <JsonSuffix>.json</JsonSuffix>
+  <CurrentUIJson>DemoMap.json</CurrentUIJson>
+</UIProject>
