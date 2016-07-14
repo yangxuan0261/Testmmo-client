@@ -10,6 +10,6 @@
 5. ignore dir(runtime, simulator,frameworks)
 
 ### runtime
-self character is red
-other character is green
+- self character is red
+- other character is green
 ![](img/b.png)
