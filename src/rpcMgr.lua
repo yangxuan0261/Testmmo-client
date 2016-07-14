@@ -92,9 +92,9 @@ end
 local function handle_request (name, args, response)
     print ("--- 【S>>C】, request from server:", name)
 
-    if args then
-        dump (args)
-    end
+    -- if args then
+    --     dump (args)
+    -- end
 
     local f = REQUEST[name]
     if f then

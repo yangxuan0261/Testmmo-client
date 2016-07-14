@@ -30,7 +30,7 @@ function Actor:initTouchEvent( ... )
         local locationInNode = self:convertToNodeSpace(touch:getLocation())
         local s = self:getContentSize()
         local rect = cc.rect(0, 0, s.width, s.height)
-            
+
         if cc.rectContainsPoint(rect, locationInNode) then
             print("--- actor1 onTouchBegan")
             return true
@@ -59,12 +59,15 @@ function Actor:initTouchEvent( ... )
 end
 
 function Actor:debugDraw( ... )
+    local size = self:getContentSize()
     self.drawNode = cc.DrawNode:create()
     self.drawNode:setAnchorPoint(cc.p(0.5, 0.5))
+    self.drawNode:setPosition(cc.p(size.width/2, size.height/2))
     self.drawNode:drawRect(cc.p(-self.aoiRadius,self.aoiRadius)
                            , cc.p(self.aoiRadius,-self.aoiRadius)
                            , cc.c4f(1,1,0,1))
     self:addChild(self.drawNode)
+
 end
 
 return Actor

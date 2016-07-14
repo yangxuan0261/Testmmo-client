@@ -63,7 +63,8 @@ function REQUEST:aoi_update_move (args)
     local character = aoiHdl.charTab[id]
     assert(character, "Error: not found character, id:"..id)
 
-    local pos = character.movement.pos
+    aoiHdl:setCharData(args.character)
+    local pos = args.character.movement.pos
     eventMgr.trigEvent(eventList.ActorMove, id, pos.x, pos.y)
 
     dump(pos, "otherChar move")
