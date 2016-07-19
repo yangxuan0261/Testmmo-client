@@ -50,6 +50,7 @@ function MainCity:regWiget()
             if #inputStr == 0 then
                 return
             end
+
             rpcMgr.send_request("gm", { gmStr = inputStr })
         end
     end
@@ -216,64 +217,6 @@ function MainCity:lvCtor( _dataTab )
     end
 
     self.listView = CharList.new(_dataTab, self.bigmap)
-
---[[
-    local function listViewEvent(sender, eventType)
-        if eventType == ccui.ListViewEventType.ons_selected_item then
-            print("select child index = ",sender:getCurSelectedIndex())
-        end
-    end
-    local widgetSize = self.bigmap:getContentSize()
-
-    local listView = ccui.ListView:create()
-    -- set list view ex direction
-    listView:setDirection(ccui.ScrollViewDir.vertical)
-    listView:setTouchEnabled(true)
-    listView:setBounceEnabled(true)
-    listView:setAnchorPoint(cc.p(0.5, 0.5))
-    listView:setBackGroundImage("alert_bg.png")
-    listView:setBackGroundImageScale9Enabled(true)
-    listView:setContentSize(cc.size(240, 130))
-    listView:setPosition(cc.p(widgetSize.width/2, widgetSize.height/2))
-    -- listView:addEventListener(listViewEvent)
-    self.bigmap:addChild(listView)
-    self.listView = listView
-
-    local btnTab = {}
-    local function touchEvent(sender,eventType)
-       if eventType == ccui.TouchEventType.ended then
-            local data = btnTab[sender]
-            local id = tonumber(data.id)
-            print("------- character_pick, id:", id)
-            rpcMgr.send_request("character_pick", { id = id })
-       end
-    end
-
-    --add custom item
-    for k,v in pairs(_dataTab) do
-        local name = "【"..v.general.name.."】"
-        local lblName = cc.Label:createWithTTF(name, "simhei.ttf", 20)
-        lblName:setAnchorPoint(cc.p(0.5, 0.5))
-
-        local btnSel = ccui.Button:create("DemoLogin/button_p.png", "DemoLogin/button.png")
-        btnSel:setScale9Enabled(true)
-        btnSel:addTouchEventListener(touchEvent)
-        btnTab[btnSel] = v
-
-        local lvSize = listView:getContentSize()
-        local btnSize = btnSel:getContentSize()
-        local lblSize = lblName:getContentSize()
-
-        local lvItem = ccui.Layout:create()
-        lvItem:setContentSize(cc.size(lvSize.width, btnSize.height))
-        lblName:setPosition(cc.p(lblSize.width / 2, lvItem:getContentSize().height / 2.0))
-        btnSel:setPosition(cc.p(lvSize.width - btnSize.width / 2, lvItem:getContentSize().height / 2.0))
-        lvItem:addChild(lblName)
-        lvItem:addChild(btnSel)
-
-        listView:pushBackCustomItem(lvItem)
-    end
-]]
 end
 
 return MainCity

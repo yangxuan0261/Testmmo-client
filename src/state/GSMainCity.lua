@@ -1,4 +1,5 @@
 local MainCity = require("app.views.MainCity")
+local ChatList = require("app.views.ChatList")
 local GSBase = require("state.GSBase")
 local GSMainCity = class("GSMainCity", GSBase)
 
@@ -12,6 +13,7 @@ function GSMainCity:onEnterState( ... )
     rpcMgr.connGameServer()
 
     self.mainCityLy = MainCity.new()
+    -- self.mainCityLy = ChatList.new(mainScene)
     mainScene:addChild(self.mainCityLy)
 end
 

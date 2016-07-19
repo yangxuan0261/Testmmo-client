@@ -12,7 +12,6 @@ function CharHandler:ctor( _user )
     table.merge(self.request, REQUEST)
     charHdl = self
     user = _user
-    dump(user)
 end
 
 

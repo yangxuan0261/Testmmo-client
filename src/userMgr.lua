@@ -1,11 +1,9 @@
 local Handler = require("handler.Handler")
 local CharHandler = require("handler.CharHandler")
 local AoiHandler = require("handler.AoiHandler")
+local TestAoiHandler = require("handler.TestAoiHandler")
 
 local User = class("User", Handler)
-
-local charHdl
-local aoiHdl
 
 local RESPONSE = {}
 local REQUEST = {}
@@ -18,13 +16,11 @@ function User:ctor()
     self:regEvent()
 
     -- register all handler
-    charHdl = CharHandler.new(self)
-    aoiHdl = AoiHandler.new(self)
-    charHdl:regHandler(rpcMgr.request, rpcMgr.response)
-    aoiHdl:regHandler(rpcMgr.request, rpcMgr.response)
-
-    self.charHdl = charHdl
-    self.aoiHdl = aoiHdl
+    self.charHdl = CharHandler.new(self)
+    self.aoiHdl = AoiHandler.new(self)
+    self.testAoiHdl = TestAoiHandler.new(self)
+    self.charHdl:regHandler(rpcMgr.request, rpcMgr.response)
+    self.aoiHdl:regHandler(rpcMgr.request, rpcMgr.response)
 end
 
 function User:regEvent( ... )

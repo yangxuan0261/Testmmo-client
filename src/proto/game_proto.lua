@@ -163,6 +163,10 @@ gm 20100 {
     request {
         gmStr 0 : string
     }
+    response {
+        func 0 : string
+        data 1 : string
+    }
 }
 
 ]]
