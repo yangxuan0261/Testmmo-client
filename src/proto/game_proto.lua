@@ -161,7 +161,7 @@ test1 10100 {
 
 gm 20100 {
     request {
-        gmStr 0 : string
+        data 0 : string
     }
     response {
         func 0 : string

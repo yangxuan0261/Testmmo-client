@@ -51,7 +51,7 @@ function MainCity:regWiget()
                 return
             end
 
-            rpcMgr.send_request("gm", { gmStr = inputStr })
+            rpcMgr.send_request("gm", { data = inputStr })
         end
     end
 

@@ -11,13 +11,13 @@ local Scheduler = cc.Director:getInstance():getScheduler()
 RpcMgr.schedulerEntry = nil
 
 local loginserver = {
-    ip = "192.168.253.130",
+    ip = "192.168.253.131",
     port = 9777,
 }
 
 -- get from server
 local gameserver = {
-    addr = "192.168.253.130",
+    addr = "192.168.253.131",
     port = 9555,
     name = "gameserver",
 }
