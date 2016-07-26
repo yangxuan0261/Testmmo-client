@@ -19,7 +19,7 @@ gameStateMgr = nil
 local LoginLayer = require("app.views.Login")
 local MainCity = require("app.views.MainCity")
 
--- local cjson = require("cjson")
+local cjson = require("cjson")
 
 ------------ reg all RESPONSE begin -------
 user:regHandler(rpcMgr.request, rpcMgr.response)
@@ -29,10 +29,11 @@ mainScene = nil
 function MainScene:onCreate()
     mainScene = self
     self:regEvent()
-    gameStateMgr = GSMgr.new()
---[[
+    -- gameStateMgr = GSMgr.new()
+
+    --[[]]
     local tab = {
-        aaa = 123,
+        aaa = 17179869184,
         bbb = "hello",
         ccc = {
             ddd = "world",
@@ -41,12 +42,11 @@ function MainScene:onCreate()
     }
     local str = cjson.encode(tab)
     print("--- str:", str)
-]]
-    -- local str2 = [[{"aaa":111}]]
-    -- local tab2 = cjson.decode(str2)
-    -- for k,v in pairs(tab2) do
-    --     print(k,v)
-    -- end
+    local str2 = [[{"xxx":111, "yyy":[{"jjj":"hello", "kkk":999}], "zzz":777}]]
+    local tab2 = cjson.decode(str2)
+    for k,v in pairs(tab2) do
+        print(k,v)
+    end
     -- local size = cc.Director:getInstance():getVisibleSize()
     -- self.loginLy = LoginLayer.new()
     -- self:addChild(self.loginLy)
