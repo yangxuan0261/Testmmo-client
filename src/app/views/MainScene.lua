@@ -29,9 +29,9 @@ mainScene = nil
 function MainScene:onCreate()
     mainScene = self
     self:regEvent()
-    -- gameStateMgr = GSMgr.new()
+    gameStateMgr = GSMgr.new()
 
-    --[[]]
+--[[
     local tab = {
         aaa = 17179869184,
         bbb = "hello",
@@ -42,11 +42,12 @@ function MainScene:onCreate()
     }
     local str = cjson.encode(tab)
     print("--- str:", str)
-    local str2 = [[{"xxx":111, "yyy":[{"jjj":"hello", "kkk":999}], "zzz":777}]]
+    local str2 = [[{"xxx":111, "yyy":[{"jjj":"hello", "kkk":999}], "zzz":777}
     local tab2 = cjson.decode(str2)
     for k,v in pairs(tab2) do
         print(k,v)
     end
+]]
     -- local size = cc.Director:getInstance():getVisibleSize()
     -- self.loginLy = LoginLayer.new()
     -- self:addChild(self.loginLy)
