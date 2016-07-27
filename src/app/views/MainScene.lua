@@ -19,7 +19,7 @@ gameStateMgr = nil
 local LoginLayer = require("app.views.Login")
 local MainCity = require("app.views.MainCity")
 
-local cjson = require("cjson")
+-- local cjson = require("cjson")
 
 ------------ reg all RESPONSE begin -------
 user:regHandler(rpcMgr.request, rpcMgr.response)

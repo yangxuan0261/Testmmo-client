@@ -1,4 +1,5 @@
 local Handler = require("handler.Handler")
+local cjson = require("cjson")
 
 local GmHandler = class("GmHandler", Handler)
 
@@ -16,8 +17,19 @@ end
 
 
 function RESPONSE:gm( args )
-    dump(args, "--- gm")
-    -- eventMgr.trigEvent(eventList.ListChar, args.character)
+    if not args.func or not args.data then
+        return
+    end
+
+    local f = gmHdl.response[args.func]
+    if f then
+        local argTab = cjson.decode(args.data)
+        f(nil, argTab)
+    end
+end
+
+function RESPONSE:helloFunc( args ) -- for test
+    dump(args, "--- helloFunc")
 end
 
 return GmHandler
