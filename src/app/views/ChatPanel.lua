@@ -1,5 +1,9 @@
 local ChatPanel = class("ChatPanel")
 
+local friendMsgTab = {}
+local laborMsgTab = {}
+local worldMsgTab = {}
+
 function ChatPanel:ctor(_parent)
     self.dataTab = _dataTab
     self._parent = _parent
@@ -22,15 +26,15 @@ function ChatPanel:initUI( ... )
 end
 
 function ChatPanel:regEvent( ... )
-    eventMgr.regEvent(eventList.SelChar, handler(self, self.onFriendMsg))
-    eventMgr.regEvent(eventList.SelChar, handler(self, self.onLaborMsg))
-    eventMgr.regEvent(eventList.SelChar, handler(self, self.onWorldMsg))
+    eventMgr.regEvent(eventList.FriendMsg, handler(self, self.onFriendMsg))
+    eventMgr.regEvent(eventList.LaborMsg, handler(self, self.onLaborMsg))
+    eventMgr.regEvent(eventList.WorldMsg, handler(self, self.onWorldMsg))
 end
 
 function ChatPanel:unregEvent( ... )
-    eventMgr.unregEvent(eventList.SelChar, handler(self, self.onFriendMsg))
-    eventMgr.unregEvent(eventList.SelChar, handler(self, self.onLaborMsg))
-    eventMgr.unregEvent(eventList.SelChar, handler(self, self.onWorldMsg))
+    eventMgr.unregEvent(eventList.FriendMsg, handler(self, self.onFriendMsg))
+    eventMgr.unregEvent(eventList.LaborMsg, handler(self, self.onLaborMsg))
+    eventMgr.unregEvent(eventList.WorldMsg, handler(self, self.onWorldMsg))
 end
 
 function ChatPanel:regWiget( ... )
@@ -151,10 +155,12 @@ function ChatPanel:fillData( ... )
     end
 end
 
-function ChatPanel:onFriendMsg( ... )
+function ChatPanel:onFriendMsg(  )
+
 end
 
-function ChatPanel:onLaborMsg( ... )
+function ChatPanel:onLaborMsg( _data )
+    table.insert(laborMsgTab, _data)
 end
 
 function ChatPanel:onWorldMsg( ... )

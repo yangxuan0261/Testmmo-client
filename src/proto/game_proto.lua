@@ -221,6 +221,14 @@ user_info 20101 {
     }
 }
 
+user_chat 20102 {
+    request {
+        flag 0 : integer
+        data 1 : string
+    }
+}
+
+
 tips 20100 {
     request {
         content 0 : string

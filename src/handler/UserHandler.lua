@@ -20,6 +20,10 @@ function REQUEST:user_info( args )
     local info = cjson.decode(args.data)
     dump(info, "--- user_info")
     user.info  = info
+end
+
+function REQUEST:user_chat( args )
+    
     -- eventMgr.trigEvent(eventList.Tips, args.content)
 end
 
