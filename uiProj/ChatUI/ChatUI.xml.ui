@@ -10,18 +10,14 @@
     <string>ChatUI_1.json</string>
   </JsonList>
   <CanvasSize>
-    <Width>0</Width>
-    <Height>0</Height>
+    <Width>960</Width>
+    <Height>640</Height>
   </CanvasSize>
   <filePath>G:\workplace_cocos\TestSky\uiProj\ChatUI\ChatUI.xml.ui</filePath>
   <ProjectType>UIProject</ProjectType>
   <ResRelativePath />
   <imageFileList />
-  <imagePngList>
-    <string>alert_bg.png</string>
-    <string>button.png</string>
-    <string>button_p.png</string>
-  </imagePngList>
+  <imagePngList />
   <JsonSuffix>.json</JsonSuffix>
   <CurrentUIJson>ChatUI_1.json</CurrentUIJson>
 </UIProject>
