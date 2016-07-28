@@ -41,6 +41,15 @@ function MainCity:regEvent()
     eventMgr.regEvent(eventList.RemoveChar, handler(self, self.removeActor))
 end
 
+function MainCity:unregEvent()
+    eventMgr.unregEvent(eventList.SelChar, handler(self, self.selChar))
+    eventMgr.unregEvent(eventList.ActorMove, handler(self, self.actorMove))
+    eventMgr.unregEvent(eventList.Tips, handler(self, self.showTips))
+    eventMgr.unregEvent(eventList.ListChar, handler(self, self.lvCtor))
+    eventMgr.unregEvent(eventList.CreateChar, handler(self, self.createActor))
+    eventMgr.unregEvent(eventList.RemoveChar, handler(self, self.removeActor))
+end
+
 function MainCity:regWiget()
     local function onSend(sender, eventType)
         if eventType == ccui.TouchEventType.ended then
@@ -217,6 +226,10 @@ function MainCity:lvCtor( _dataTab )
     end
 
     self.listView = CharList.new(_dataTab, self.bigmap)
+end
+
+function MainCity:onEixt()
+    self:unregEvent()
 end
 
 return MainCity

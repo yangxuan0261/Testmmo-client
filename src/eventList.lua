@@ -13,4 +13,9 @@ EventList.ActorAdd          = "ActorAdd"
 EventList.ActorRemove       = "ActorRemove"
 EventList.Tips              = "Tips"
 
+EventList.FriendMsg         = "FriendMsg"
+EventList.LaborMsg          = "LaborMsg"
+EventList.WorldMsg          = "WorldMsg"
+
+
 return EventList

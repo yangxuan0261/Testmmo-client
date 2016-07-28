@@ -215,6 +215,12 @@ test2 4 {
     }
 }
 
+user_info 20101 {
+    request {
+        data 0 : string
+    }
+}
+
 tips 20100 {
     request {
         content 0 : string

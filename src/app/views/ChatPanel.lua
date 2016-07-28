@@ -1,13 +1,14 @@
-local ChatList = class("ChatList")
+local ChatPanel = class("ChatPanel")
 
-function ChatList:ctor(_parent)
+function ChatPanel:ctor(_parent)
     self.dataTab = _dataTab
     self._parent = _parent
     self:initUI()
     -- self:fillData()
+    self:regEvent()
 end
 
-function ChatList:initUI( ... )
+function ChatPanel:initUI( ... )
     local uipath = "ChatUI_1/ChatUI_1.json"
     print("------ load json:"..uipath)
     self._widget = ccs.GUIReader:getInstance():widgetFromJsonFile(uipath)
@@ -20,7 +21,19 @@ function ChatList:initUI( ... )
     self:initListView()
 end
 
-function ChatList:regWiget( ... )
+function ChatPanel:regEvent( ... )
+    eventMgr.regEvent(eventList.SelChar, handler(self, self.onFriendMsg))
+    eventMgr.regEvent(eventList.SelChar, handler(self, self.onLaborMsg))
+    eventMgr.regEvent(eventList.SelChar, handler(self, self.onWorldMsg))
+end
+
+function ChatPanel:unregEvent( ... )
+    eventMgr.unregEvent(eventList.SelChar, handler(self, self.onFriendMsg))
+    eventMgr.unregEvent(eventList.SelChar, handler(self, self.onLaborMsg))
+    eventMgr.unregEvent(eventList.SelChar, handler(self, self.onWorldMsg))
+end
+
+function ChatPanel:regWiget( ... )
     local function onSend(sender,eventType)
         if eventType == ccui.TouchEventType.ended then
             local inputStr = self.eb_msg:getText()
@@ -34,6 +47,24 @@ function ChatList:regWiget( ... )
         end
     end
 
+    local function onFriend(sender,eventType)
+        if eventType == ccui.TouchEventType.ended then
+
+        end
+    end
+
+    local function onLabor(sender,eventType)
+        if eventType == ccui.TouchEventType.ended then
+
+        end
+    end
+
+    local function onWorld(sender,eventType)
+        if eventType == ccui.TouchEventType.ended then
+
+        end
+    end
+
     local root = self._widget
     local btnSend = ccui.Helper:seekWidgetByName(root, "Button_send")
     local btnClose = ccui.Helper:seekWidgetByName(root, "Button_close")
@@ -41,9 +72,16 @@ function ChatList:regWiget( ... )
     btnClose:addTouchEventListener(onClose)
     self.imgMsgBg = ccui.Helper:seekWidgetByName(root, "Image_msgBg")
     self.imgLvBg = ccui.Helper:seekWidgetByName(root, "Image_lvBg")
+
+    local btnFriend = ccui.Helper:seekWidgetByName(root, "Button_friend")
+    local btnLabor = ccui.Helper:seekWidgetByName(root, "Button_labor")
+    local btnWorld = ccui.Helper:seekWidgetByName(root, "Button_world")
+    btnFriend:addTouchEventListener(onFriend)
+    btnLabor:addTouchEventListener(onLabor)
+    btnWorld:addTouchEventListener(onWorld)
 end
 
-function ChatList:initEditBox( ... )
+function ChatPanel:initEditBox( ... )
     local size = self.imgMsgBg:getContentSize()
 
     local visibleSize = cc.Director:getInstance():getVisibleSize()
@@ -62,7 +100,7 @@ function ChatList:initEditBox( ... )
 end
 
 
-function ChatList:initListView( ... )
+function ChatPanel:initListView( ... )
     local size = self.imgLvBg:getContentSize()
 
     local listView = ccui.ListView:create()
@@ -78,7 +116,7 @@ function ChatList:initListView( ... )
     self.listView = listView
 end
 
-function ChatList:fillData( ... )
+function ChatPanel:fillData( ... )
     local btnTab = {}
     local function touchEvent(sender,eventType)
        if eventType == ccui.TouchEventType.ended then
@@ -113,8 +151,18 @@ function ChatList:fillData( ... )
     end
 end
 
-function ChatList:remove( ... )
+function ChatPanel:onFriendMsg( ... )
+end
+
+function ChatPanel:onLaborMsg( ... )
+end
+
+function ChatPanel:onWorldMsg( ... )
+end
+
+function ChatPanel:remove( ... )
+    self:unregEvent()
     self.listView:removeFromParent(true)
 end
 
-return ChatList
+return ChatPanel

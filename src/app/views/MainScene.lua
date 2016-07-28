@@ -58,6 +58,11 @@ function MainScene:regEvent()
     eventMgr.regEvent(eventList.LoginSuccess, handler(self, self.onLoginSuccess))
 end
 
+function MainScene:unregEvent()
+    eventMgr.unregEvent(eventList.ExitGame, handler(self, self.exitGame))
+    eventMgr.unregEvent(eventList.LoginSuccess, handler(self, self.onLoginSuccess))
+end
+
 function MainScene:onLoginSuccess()
     -- 切到主城状态
     gameStateMgr:changeState(GSBase.EnumGSMainCity)
@@ -65,6 +70,7 @@ function MainScene:onLoginSuccess()
 end
 
 function MainScene:exitGame( ... )
+    self:unregEvent()
     cc.Director:getInstance():endToLua()
 end
 
