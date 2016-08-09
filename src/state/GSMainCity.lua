@@ -13,8 +13,8 @@ function GSMainCity:onEnterState( ... )
     rpcMgr.connGameServer()
 
     self.mainCityLy = MainCity.new()
-    self.mainCityLy = ChatPanel.new(mainScene)
-    -- mainScene:addChild(self.mainCityLy)
+    -- self.mainCityLy = ChatPanel.new(mainScene)
+    mainScene:addChild(self.mainCityLy)
 end
 
 function GSMainCity:onExitState( ... )

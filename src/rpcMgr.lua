@@ -185,13 +185,22 @@ function RpcMgr.schedulerReceive( ... )
     dispatch_message()
 end
 
+local function RpcCallback(flag)
+    print("--- lua net callback", flag)
+    if flag == 2 then
+        RpcMgr.schedulerEntry = Scheduler:scheduleScriptFunc(RpcMgr.schedulerReceive, 0.1, false)
+    end
+end
+_G["RpcCallback"] = RpcCallback
+
 function RpcMgr.connect()
+    network.regCallback("RpcCallback")
     local ret = network.connect(loginserver.ip, loginserver.port)
     local msg = ret and "connect loginserver success" or "connect loginserver fail"
     print("--- ", msg)
-    if ret then
-        RpcMgr.schedulerEntry = Scheduler:scheduleScriptFunc(RpcMgr.schedulerReceive, 0.1, false)
-    end
+    -- if ret then
+    --     RpcMgr.schedulerEntry = Scheduler:scheduleScriptFunc(RpcMgr.schedulerReceive, 0.1, false)
+    -- end
     return ret
 end
 

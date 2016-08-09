@@ -38,7 +38,7 @@ function LoginLayer:regWiget()
             print("--- name, pwd:", name, pwd)
 
             self.bConnect = rpcMgr.connect()
-            assert(self.bConnect, "loginServer connect fail")
+            -- assert(self.bConnect, "loginServer connect fail")
 
             rpcMgr.login(name, pwd)
         end
