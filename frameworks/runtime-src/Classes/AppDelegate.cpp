@@ -5,6 +5,19 @@
 #include "lua_module_register.h"
 #include "gameNet.h"
 
+class CNetHelper : public cocos2d::Node
+{
+public:
+	CNetHelper(){}
+	virtual ~CNetHelper(){}
+	virtual void update(float delta)
+	{
+		CGameNet::GetInstance()->Update(delta);
+	}
+private:
+
+};
+
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_LINUX)
 #include "ide-support/CodeIDESupport.h"
 #endif
@@ -84,8 +97,8 @@ bool AppDelegate::applicationDidFinishLaunching()
 	luaopen_srp(L);
 	luaopen_cjson(L);
 
-	//Director::getInstance()->getScheduler()->schedule()
-
+	CNetHelper* np = new CNetHelper();
+	Director::getInstance()->getScheduler()->scheduleUpdate(np, 0, false);
 
     //register custom function
     //LuaStack* stack = engine->getLuaStack();
