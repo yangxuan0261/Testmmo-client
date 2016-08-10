@@ -22,6 +22,12 @@ local gameserver = {
     name = "gameserver",
 }
 
+local LoginFlag = {
+    None = 0,
+    LoginServer = 1,
+    GameServer = 2,
+}
+
 local host = sproto.new (login_proto.s2c):host "package"
 local request = host:attach (sproto.new (login_proto.c2s))
 
@@ -86,8 +92,17 @@ function RESPONSE:challenge (args)
     print("------ token", token)
     user.token = token
 
+    user.lgnfg = LoginFlag.LoginServer
+
     eventMgr.trigEvent(eventList.LoginSuccess)
 end
+
+function RESPONSE:login (args)
+    print ("RESPONSE.login") -- connect to gameserver success
+
+
+end
+
 
 local function handle_request (name, args, response)
     print ("--- 【S>>C】, request from server:", name)
@@ -185,19 +200,39 @@ function RpcMgr.schedulerReceive( ... )
     dispatch_message()
 end
 
+local CbFlag = {
+    None = 0,
+    StartConnect = 1,
+    ConnectSucc = 2,
+    ConnectFail = 3,
+    Networking = 4,
+    Disconnected = 5,
+    Reconnect = 6,
+    Count = 7,
+}
+
 local function RpcCallback(flag)
     print("--- lua net callback", flag)
-    if flag == 2 then
-        RpcMgr.schedulerEntry = Scheduler:scheduleScriptFunc(RpcMgr.schedulerReceive, 0.1, false)
+    if flag == CbFlag.StartConnect then
+    elseif flag == CbFlag.ConnectSucc then
+        if user.lgnfg == LoginFlag.None then
+            rpcMgr.autoLogin()
+        elseif user.lgnfg == LoginFlag.LoginServer then
+            rpcMgr.autoGameServer()
+        end
+
+    elseif flag == CbFlag.ConnectFail then
+    elseif flag == CbFlag.Disconnected then
+    elseif flag == CbFlag.Reconnect then
     end
 end
-_G["RpcCallback"] = RpcCallback
+_G["RpcCallback"] = RpcCallback -- global func
 
 function RpcMgr.connect()
     network.regCallback("RpcCallback")
     local ret = network.connect(loginserver.ip, loginserver.port)
-    local msg = ret and "connect loginserver success" or "connect loginserver fail"
-    print("--- ", msg)
+    -- local msg = ret and "connect loginserver success" or "connect loginserver fail"
+    -- print("--- ", msg)
     -- if ret then
     --     RpcMgr.schedulerEntry = Scheduler:scheduleScriptFunc(RpcMgr.schedulerReceive, 0.1, false)
     -- end
@@ -205,29 +240,46 @@ function RpcMgr.connect()
 end
 
 function RpcMgr.login(username, password)
+    user.name = username
+    user.password = password
+    user.lgnfg = LoginFlag.None
+end
+
+function RpcMgr.autoLogin()
+    if not RpcMgr.schedulerEntry then
+        network.startSRThread()
+        RpcMgr.schedulerEntry = Scheduler:scheduleScriptFunc(RpcMgr.schedulerReceive, 0.1, false)
+    end
+
+    user.login = false
     local private_key, public_key = srp.create_client_key()
     user.private_key = private_key
     user.public_key = public_key
     print("--- private_key:", private_key)
     print("--- public_key:", public_key)
-    user.name = username
-    user.password = password
     send_request ("handshake", { name = user.name, client_pub = public_key })
 end
 
 function RpcMgr.connGameServer()
     local ret = network.connect(gameserver.addr, gameserver.port)
     -- local ret = network.connect(args.ip, args.port)
-    local msg = ret and "connect gameserver success" or "connect gameserver fail"
-    print("--- ", msg)
-    if ret then
-        send_request ("login", { session = user.session, token = user.token })
+    -- local msg = ret and "connect gameserver success" or "connect gameserver fail"
+    -- print("--- ", msg)
+    -- if ret then
+        
+    -- end
+end
 
-        host = sproto.new (game_proto.s2c):host "package"
-        request = host:attach (sproto.new (game_proto.c2s))
+function RpcMgr.autoGameServer()
+    send_request ("login", { session = user.session, token = user.token })
 
-        send_request ("character_list") -- 请求所有的角色数据
-    end
+    -- network.clear() -- clear buffers
+    user.lgnfg = LoginFlag.GameServer
+
+    host = sproto.new (game_proto.s2c):host "package"
+    request = host:attach (sproto.new (game_proto.c2s))
+
+    send_request ("character_list") -- 请求所有的角色数据
 end
 
 function RpcMgr.close()

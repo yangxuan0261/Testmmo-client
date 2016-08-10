@@ -37,10 +37,10 @@ function LoginLayer:regWiget()
             local pwd = self.tfPwd:getString()
             print("--- name, pwd:", name, pwd)
 
+            rpcMgr.login(name, pwd)
             self.bConnect = rpcMgr.connect()
             -- assert(self.bConnect, "loginServer connect fail")
 
-            rpcMgr.login(name, pwd)
         end
     end
 
