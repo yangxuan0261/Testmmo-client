@@ -1,6 +1,7 @@
 local CharList = class("CharList")
 
 function CharList:ctor(_dataTab, _parent)
+    dump(_dataTab, "--- CharList:ctor")
     self.dataTab = _dataTab
     self.parent = _parent
     self:initUI()

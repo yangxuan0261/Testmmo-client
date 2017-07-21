@@ -26,7 +26,7 @@ function RESPONSE:character_list( args )
     for k, v in pairs (args.character) do
         user.charTab[k] = v
     end
-    dump(user.charTab)
+    -- dump(user.charTab)
 
     eventMgr.trigEvent(eventList.ListChar, args.character)
 end

@@ -21,7 +21,7 @@ function ChatPanel:initUI( ... )
     self._layer:addChild(self._widget)
     self._parent:addChild(self._layer)
     self:regWiget()
-    self:initEditBox()
+    -- self:initEditBox()
     self:initListView()
 end
 

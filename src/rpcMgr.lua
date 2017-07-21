@@ -11,13 +11,13 @@ local Scheduler = cc.Director:getInstance():getScheduler()
 RpcMgr.schedulerEntry = nil
 
 local loginserver = {
-    ip = "192.168.253.131",
+    ip = "192.168.23.129",
     port = 9777,
 }
 
 -- get from server
 local gameserver = {
-    addr = "192.168.253.131",
+    addr = "192.168.23.129",
     port = 9555,
     name = "gameserver",
 }
@@ -139,7 +139,7 @@ local function unpack (text)
     end
     local s = text:byte (1) * 256 + text:byte (2)
 
-    print(string.format("--- unpacking, realSize:%d, expectSize:%d",size, s))
+    -- print(string.format("--- unpacking, realSize:%d, expectSize:%d",size, s))
     if size < s + 2 then
         return nil, text
     end
@@ -157,7 +157,7 @@ local function recv (last)
 
     local r, err = network:recv()
     if r then
-        print("--- socket recv, r, len:", #r, r)
+        -- print("--- socket recv, r, len:", #r, r)
     end
     if err then
         return nil, last
@@ -190,6 +190,7 @@ function RpcMgr.connect()
     local msg = ret and "connect loginserver success" or "connect loginserver fail"
     print("--- ", msg)
     if ret then
+        network.startSRThread()
         RpcMgr.schedulerEntry = Scheduler:scheduleScriptFunc(RpcMgr.schedulerReceive, 0.1, false)
     end
     return ret
@@ -201,6 +202,8 @@ function RpcMgr.login(username, password)
     user.public_key = public_key
     print("--- private_key:", private_key)
     print("--- public_key:", public_key)
+    print("--- username:", username)
+    print("--- password:", password)
     user.name = username
     user.password = password
     send_request ("handshake", { name = user.name, client_pub = public_key })
@@ -217,7 +220,7 @@ function RpcMgr.connGameServer()
         host = sproto.new (game_proto.s2c):host "package"
         request = host:attach (sproto.new (game_proto.c2s))
 
-        send_request ("character_list") -- 请求所有的角色数据
+        -- send_request ("character_list") -- 请求所有的角色数据
     end
 end
 

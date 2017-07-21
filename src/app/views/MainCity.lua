@@ -14,6 +14,7 @@ local floor = math.floor
 function MainCity:ctor( ... )
     self:initUI()
     self:initTouchEvent()
+    self:initLogic()
 end
 
 function MainCity:initUI( ... )
@@ -75,7 +76,8 @@ function MainCity:regWiget()
     btnClose:addTouchEventListener(onClose)
     self.eb_cmd = ccui.Helper:seekWidgetByName(root, "TextField_cmd")
     self.bigmap = ccui.Helper:seekWidgetByName(root, "ImageView_map")
-
+    dump(self.eb_cmd, "--- self.eb_cmd")
+    dump(self.bigmap, "--- self.bigmap")
     self:initEditbox()
 end
 
@@ -225,7 +227,12 @@ function MainCity:lvCtor( _dataTab )
         self.listView = nil
     end
 
+    dump(self.bigmap, "--- MainCity:lvCtor 222")
     self.listView = CharList.new(_dataTab, self.bigmap)
+end
+
+function MainCity:initLogic()
+    rpcMgr.send_request("character_list") -- 请求所有的角色数据
 end
 
 function MainCity:onEixt()
