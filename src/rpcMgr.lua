@@ -11,13 +11,13 @@ local Scheduler = cc.Director:getInstance():getScheduler()
 RpcMgr.schedulerEntry = nil
 
 local loginserver = {
-    ip = "192.168.23.129",
+    ip = "192.168.23.128",
     port = 9777,
 }
 
 -- get from server
 local gameserver = {
-    addr = "192.168.23.129",
+    addr = "192.168.23.128",
     port = 9555,
     name = "gameserver",
 }
@@ -26,20 +26,40 @@ local host = sproto.new (login_proto.s2c):host "package"
 local request = host:attach (sproto.new (login_proto.c2s))
 
 local function send_message (msg)
-    local packmsg = string.pack (">s2", msg)
-    -- print ("^^^C>>S send_message, len:"..#packmsg..", type:"..type(packmsg))
-    network.send(packmsg)
+    network.send(msg)
 end
 
 local session = {}
 local session_id = 0
+local send_request_adapter = nil
 local function send_request (name, args)
+    send_request_adapter(name, args)
+    if true then
+        return
+    end
+
     print("--- 【C>>S】, send_request:", name)
     session_id = session_id + 1
     local str = request (name, args, session_id)
     send_message (str)
     session[session_id] = { name = name, args = args }
 end
+
+local Utils = require "proto_2.utils"
+local msg_define = require "proto_2.msg_define"
+local Packer = require "proto_2.packer"
+
+local function send_request_2 (name, args)
+    print("--- 【C>>S】, send_request:", name)
+    -- session_id = session_id + 1
+    -- local str = request (name, args, session_id)
+    -- send_message (str)
+    -- session[session_id] = { name = name, args = args }
+    local msg = Utils.table_2_str(args)
+    local packet = Packer.pack(name, msg)
+    send_message (packet)
+end
+send_request_adapter = send_request_2
 
 ------------ register interface begin -------
 local RESPONSE = {}
@@ -50,14 +70,12 @@ RpcMgr.send_request = send_request
 ------------ register interface begin -------
 
 
-function RESPONSE:handshake (args)
-    print ("RESPONSE.handshake, self.name", self.name)
-    local name = self.name
-    assert (name == user.name)
+function RESPONSE.handshake_svr (args)
+    print ("--- handshake_svr")
 
     if args.user_exists then
         print("--- user user_exists")
-        local key = srp.create_client_session_key (name, user.password, args.salt, user.private_key, user.public_key, args.server_pub)
+        local key = srp.create_client_session_key (user.name, user.password, args.salt, user.private_key, user.public_key, args.server_pub)
         user.session_key = key
         local ret = { challenge = aes.encrypt (args.challenge, key) }
         rpcMgr.send_request ("auth", ret)
@@ -71,7 +89,7 @@ function RESPONSE:handshake (args)
     end
 end
 
-function RESPONSE:auth (args)
+function RESPONSE.auth_svr (args)
     print ("RESPONSE.auth")
 
     user.session = args.session
@@ -79,7 +97,7 @@ function RESPONSE:auth (args)
     rpcMgr.send_request ("challenge", { session = args.session, challenge = challenge })
 end
 
-function RESPONSE:challenge (args)
+function RESPONSE.challenge_svr (args)
     print ("RESPONSE.challenge")
 
     local token = aes.encrypt (args.token, user.session_key)
@@ -89,44 +107,14 @@ function RESPONSE:challenge (args)
     eventMgr.trigEvent(eventList.LoginSuccess)
 end
 
-local function handle_request (name, args, response)
-    print ("--- 【S>>C】, request from server:", name)
-
-    -- if args then
-    --     dump (args)
-    -- end
-
-    local f = REQUEST[name]
+local function handle_message (data)
+    local proto_name, params_str = Packer.unpack(data)
+    local paramTab = Utils.str_2_table(params_str)
+    local f = RESPONSE[proto_name]
     if f then
-        local ret = f(nil, args)
-        if ret and response then
-            send_message (response (ret))
-        end
-    else
-        print("--- handle_request, not found func:"..s.name)
-    end
-end
-
-local function handle_response (id, args)
-    local s = assert (session[id])
-    session[id] = nil
-    local f = RESPONSE[s.name]
-
-    print ("--- 【S>>C】, response from server:", s.name)
-    -- dump (args)
-
-    if f then
-        f (s.args, args)
+        f(paramTab)
     else
         print("--- handle_response, not found func:"..s.name)
-    end
-end
-
-local function handle_message (t, ...)
-    if t == "REQUEST" then
-        handle_request (...)
-    else
-        handle_response (...)
     end
 end
 
@@ -139,7 +127,7 @@ local function unpack (text)
     end
     local s = text:byte (1) * 256 + text:byte (2)
 
-    -- print(string.format("--- unpacking, realSize:%d, expectSize:%d",size, s))
+    print(string.format("--- unpacking, realSize:%d, expectSize:%d",size, s))
     if size < s + 2 then
         return nil, text
     end
@@ -157,7 +145,7 @@ local function recv (last)
 
     local r, err = network:recv()
     if r then
-        -- print("--- socket recv, r, len:", #r, r)
+        print("--- socket recv, r, len:", #r, r)
     end
     if err then
         return nil, last
@@ -178,7 +166,7 @@ function RpcMgr.schedulerReceive( ... )
                 break
             end
 
-            handle_message (host:dispatch (v))
+            handle_message (v)
         end
     end
 
