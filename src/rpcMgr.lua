@@ -55,8 +55,9 @@ local function send_request_2 (name, args)
     -- local str = request (name, args, session_id)
     -- send_message (str)
     -- session[session_id] = { name = name, args = args }
-    local msg = Utils.table_2_str(args)
-    local packet = Packer.pack(name, msg)
+    -- local msg = Utils.table_2_str(args)
+    -- print("------------ msg", type(msg))
+    local packet = Packer.pack(name, args)
     send_message (packet)
 end
 send_request_adapter = send_request_2
@@ -105,6 +106,16 @@ function RESPONSE.challenge_svr (args)
     user.token = token
 
     eventMgr.trigEvent(eventList.LoginSuccess)
+end
+
+function RESPONSE.user_info_svr (args)
+    print ("RESPONSE.user_info_svr")
+
+    dump(args, "--- user_info_svr")
+
+
+    local tmpTab = {yang= 111, xuan=666}
+    send_request ("rank_info", tmpTab)
 end
 
 local function handle_message (data)

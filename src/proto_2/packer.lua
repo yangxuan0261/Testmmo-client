@@ -15,8 +15,6 @@ function M.pack(proto_name, msg)
 	-- print("msg content:", params_str)
 	local len = 2 + 2 + #params_str
 	local data = Utils.int16_2_bytes(len) .. Utils.int16_2_bytes(proto_id) .. Utils.int16_2_bytes(#params_str) .. params_str
-    -- local len = 2 + #params_str
-    -- local data = Utils.int16_2_bytes(proto_id) .. Utils.int16_2_bytes(#params_str) .. params_str
     return data	
 end
 

@@ -15,10 +15,15 @@ local id_tbl = {
     {name = "auth"},
     {name = "challenge"},
     {name = "login"},
-    
+
     {name = "handshake_svr"},
     {name = "auth_svr"},
     {name = "challenge_svr"},
+
+    {name = "character_list"},  
+    {name = "user_info_svr"},
+    
+    {name = "rank_info"},
 }
 
 local name_tbl = {}
@@ -28,7 +33,9 @@ for id,v in ipairs(id_tbl) do
 end
 
 function M.name_2_id(name)
-    return name_tbl[name]
+    local id = name_tbl[name]
+    assert(id ~= nil, string.format("------- 不存在协议 【%s】", name))
+    return id
 end
 
 function M.id_2_name(id)
