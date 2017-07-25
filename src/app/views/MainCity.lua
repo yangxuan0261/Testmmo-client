@@ -232,7 +232,7 @@ function MainCity:lvCtor( _dataTab )
 end
 
 function MainCity:initLogic()
-    rpcMgr.send_request("character_list") -- 请求所有的角色数据
+    -- rpcMgr.send_request("character_list") -- 请求所有的角色数据
 end
 
 function MainCity:onEixt()
