@@ -1,29 +1,26 @@
 local M = {}
 
 local id_tbl = {
-    -- 登陆协议
-    {name = "login.login"},
-    {name = "login.register"},
-    -- baseapp登陆
-    {name = "login.login_baseapp"},
-    {name = "room.create_room"},
-    {name = "room.join_room"},
-    {name = "room.room_begin"},
-    {name = "match.dealt"},
+------- 登陆 -------
+{name = "rpc_client_handshake"},
+{name = "rpc_server_handshake"},
+{name = "rpc_client_auth"},
+{name = "rpc_server_auth"},
+{name = "rpc_client_challenge"},
+{name = "rpc_server_challenge"},
+{name = "rpc_server_login_gameserver"},
 
-    {name = "handshake"},
-    {name = "auth"},
-    {name = "challenge"},
-    {name = "login"},
+------- 游戏 -------
+{name = "rpc_client_user_info"},
+{name = "rpc_server_rank_info"},
 
-    {name = "handshake_svr"},
-    {name = "auth_svr"},
-    {name = "challenge_svr"},
+------- 聊天 -------
+{name = "rpc_server_world_chat"},
+{name = "rpc_client_word_chat"},
+{name = "rpc_client_tips"},
 
-    {name = "character_list"},  
-    {name = "user_info_svr"},
-    
-    {name = "rank_info"},
+{name = "rpc_server_test_crash"},
+{name = "rpc_client_other_login"},
 }
 
 local name_tbl = {}

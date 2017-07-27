@@ -71,34 +71,34 @@ RpcMgr.send_request = send_request
 ------------ register interface begin -------
 
 
-function RESPONSE.handshake_svr (args)
-    print ("--- handshake_svr")
-
+function RESPONSE.rpc_client_handshake (args)
+    print ("--- rpc_client_handshake")
+    local name = user.name
     if args.user_exists then
         print("--- user user_exists")
-        local key = srp.create_client_session_key (user.name, user.password, args.salt, user.private_key, user.public_key, args.server_pub)
+        local key = srp.create_client_session_key (name, user.password, args.salt, user.private_key, user.public_key, args.server_pub)
         user.session_key = key
         local ret = { challenge = aes.encrypt (args.challenge, key) }
-        rpcMgr.send_request ("auth", ret)
+        rpcMgr.send_request ("rpc_server_auth", ret)
     else
         print ("--- not exists, create default_password", name, constant.default_password)
         local key = srp.create_client_session_key (name, constant.default_password, args.salt, user.private_key, user.public_key, args.server_pub)
         print("--- key:", key)
         user.session_key = key
         local ret = { challenge = aes.encrypt (args.challenge, key), password = aes.encrypt (user.password, key) }
-        rpcMgr.send_request ("auth", ret)
+        rpcMgr.send_request ("rpc_server_auth", ret)
     end
 end
 
-function RESPONSE.auth_svr (args)
+function RESPONSE.rpc_client_auth (args)
     print ("RESPONSE.auth")
 
     user.session = args.session
     local challenge = aes.encrypt (args.challenge, user.session_key)
-    rpcMgr.send_request ("challenge", { session = args.session, challenge = challenge })
+    rpcMgr.send_request ("rpc_server_challenge", { session = args.session, challenge = challenge })
 end
 
-function RESPONSE.challenge_svr (args)
+function RESPONSE.rpc_client_challenge (args)
     print ("RESPONSE.challenge")
 
     local token = aes.encrypt (args.token, user.session_key)
@@ -108,14 +108,39 @@ function RESPONSE.challenge_svr (args)
     eventMgr.trigEvent(eventList.LoginSuccess)
 end
 
-function RESPONSE.user_info_svr (args)
-    print ("RESPONSE.user_info_svr")
+local counter = 1
+function RESPONSE.rpc_client_user_info (args)
+    print ("RESPONSE.rpc_client_user_info")
+    dump(args, "--- rpc_client_user_info")
+    user.info = args
 
-    dump(args, "--- user_info_svr")
+    if counter < 5 then
+        counter = counter + 1
+        -- send_request ("rpc_server_test_crash", {aaa=111})
 
 
-    local tmpTab = {yang= 111, xuan=666}
-    send_request ("rank_info", tmpTab)
+    -- 测试上行
+    local tmpTab = {yang=111, xuan=666}
+    send_request ("rpc_server_rank_info", tmpTab)
+    end
+end
+
+function RESPONSE.rpc_client_other_login (args)
+    print ("--- 其他地方登陆")
+end
+
+
+
+function RESPONSE.rpc_client_word_chat (args)
+    assert (args.account and args.msg)
+        
+    local speaker = ""
+    if user.info.account == args.account then
+        speaker = "我"
+    else
+        speaker = args.nickName
+    end
+    print(string.format("--- 【%s】 说: %s ", speaker, args.msg))
 end
 
 local function handle_message (data)
@@ -138,7 +163,7 @@ local function unpack (text)
     end
     local s = text:byte (1) * 256 + text:byte (2)
 
-    print(string.format("--- unpacking, realSize:%d, expectSize:%d",size, s))
+    -- print(string.format("--- unpacking, realSize:%d, expectSize:%d",size, s))
     if size < s + 2 then
         return nil, text
     end
@@ -156,7 +181,7 @@ local function recv (last)
 
     local r, err = network:recv()
     if r then
-        print("--- socket recv, r, len:", #r, r)
+        -- print("--- socket recv, r, len:", #r, r)
     end
     if err then
         return nil, last
@@ -205,7 +230,7 @@ function RpcMgr.login(username, password)
     print("--- password:", password)
     user.name = username
     user.password = password
-    send_request ("handshake", { name = user.name, client_pub = public_key })
+    send_request ("rpc_server_handshake", { name = user.name, client_pub = public_key })
 end
 
 function RpcMgr.connGameServer()
@@ -214,10 +239,10 @@ function RpcMgr.connGameServer()
     local msg = ret and "connect gameserver success" or "connect gameserver fail"
     print("--- ", msg)
     if ret then
-        send_request ("login", { session = user.session, token = user.token })
+        send_request ("rpc_server_login_gameserver", { session = user.session, token = user.token })
 
-        host = sproto.new (game_proto.s2c):host "package"
-        request = host:attach (sproto.new (game_proto.c2s))
+        -- host = sproto.new (game_proto.s2c):host "package"
+        -- request = host:attach (sproto.new (game_proto.c2s))
 
         -- send_request ("character_list") -- 请求所有的角色数据
     end
