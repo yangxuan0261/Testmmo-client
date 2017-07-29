@@ -14,7 +14,7 @@ function GSMainCity:onEnterState( ... )
 
     self.mainCityLy = MainCity.new()
     -- self.chatLy = ChatPanel.new(mainScene)
-    -- mainScene:addChild(self.mainCityLy)
+    mainScene:addChild(self.mainCityLy)
 end
 
 function GSMainCity:onExitState( ... )
