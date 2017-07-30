@@ -11,13 +11,13 @@ local Scheduler = cc.Director:getInstance():getScheduler()
 RpcMgr.schedulerEntry = nil
 
 local loginserver = {
-    ip = "192.168.23.128",
+    ip = "192.168.1.103",
     port = 9777,
 }
 
 -- get from server
 local gameserver = {
-    addr = "192.168.23.128",
+    addr = "192.168.1.103",
     port = 9555,
     name = "gameserver",
 }
@@ -26,41 +26,19 @@ local host = sproto.new (login_proto.s2c):host "package"
 local request = host:attach (sproto.new (login_proto.c2s))
 
 local function send_message (msg)
+    -- print("--- send_message, len:", #msg)
     network.send(msg)
-end
-
-local session = {}
-local session_id = 0
-local send_request_adapter = nil
-local function send_request (name, args)
-    send_request_adapter(name, args)
-    if true then
-        return
-    end
-
-    print("--- 【C>>S】, send_request:", name)
-    session_id = session_id + 1
-    local str = request (name, args, session_id)
-    send_message (str)
-    session[session_id] = { name = name, args = args }
 end
 
 local Utils = require "proto_2.utils"
 local msg_define = require "proto_2.msg_define"
 local Packer = require "proto_2.packer"
 
-local function send_request_2 (name, args)
-    print("--- 【C>>S】, send_request:", name)
-    -- session_id = session_id + 1
-    -- local str = request (name, args, session_id)
-    -- send_message (str)
-    -- session[session_id] = { name = name, args = args }
-    -- local msg = Utils.table_2_str(args)
-    -- print("------------ msg", type(msg))
+local function send_request(name, args)
+    -- print("--- 【C>>S】, send_request:", name)
     local packet = Packer.pack(name, args)
     send_message (packet)
 end
-send_request_adapter = send_request_2
 
 ------------ register interface begin -------
 local RESPONSE = {}
@@ -109,20 +87,28 @@ function RESPONSE.rpc_client_challenge (args)
 end
 
 local counter = 1
+
+local function testCrash( ... )
+    rpcMgr.send_request ("rpc_server_world_chat", {msg = "I am testCrash"})
+end
+
 function RESPONSE.rpc_client_user_info (args)
     print ("RESPONSE.rpc_client_user_info")
     dump(args, "--- rpc_client_user_info")
     user.info = args
 
-    if counter < 5 then
-        counter = counter + 1
-        -- send_request ("rpc_server_test_crash", {aaa=111})
+    -- if counter < 5 then
+    --     counter = counter + 1
+    --     -- send_request ("rpc_server_test_crash", {aaa=111})
 
 
-    -- 测试上行
-    local tmpTab = {yang=111, xuan=666}
-    send_request ("rpc_server_rank_info", tmpTab)
-    end
+    -- -- 测试上行
+    -- local tmpTab = {yang=111, xuan=666}
+    -- send_request ("rpc_server_rank_info", tmpTab)
+    -- end
+
+    local time = Scheduler:scheduleScriptFunc(testCrash, 0.5, false)
+
 end
 
 function RESPONSE.rpc_client_other_login (args)
