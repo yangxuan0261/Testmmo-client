@@ -19,6 +19,7 @@ function LoginLayer:initUI( ... )
     self._widget:setAnchorPoint(cc.p(0.5, 0.5))
     self._widget:move(display.center)
     self:regWiget()
+  --  self:autoLogin()
 end
 
 function LoginLayer:regWiget()
@@ -52,6 +53,29 @@ function LoginLayer:regWiget()
 
     self.tfName = ccui.Helper:seekWidgetByName(root, "name_TextField")
     self.tfPwd = ccui.Helper:seekWidgetByName(root, "password_TextField")
+end
+
+function LoginLayer:autoLogin()
+    local i = require "util.Index"
+    print("--- index:", i)
+    local tbl = require "util.Accounts"
+    local info = tbl[i]
+
+    local writeStr 
+    if i < #tbl then
+        i = i + 1
+        writeStr = "return " .. i
+    else
+        writeStr = "return " .. 1
+    end
+    local filePath = "G:/workplace_cocos/TestSky/src/util/Index.lua"
+    local fp = io.open(filePath, "w+")
+    fp:write(writeStr)
+    fp:close()
+
+    self.bConnect = rpcMgr.connect()
+    assert(self.bConnect, "loginServer connect fail 111")
+    rpcMgr.login(info.username, info.password)
 end
 
 return LoginLayer

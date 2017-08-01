@@ -1,6 +1,5 @@
 local RpcMgr = class("RpcMgr")
 
-local sproto = require("sproto")
 local srp = require("srp")
 local aes = require("aes")
 local network = require("network")
@@ -11,19 +10,17 @@ local Scheduler = cc.Director:getInstance():getScheduler()
 RpcMgr.schedulerEntry = nil
 
 local loginserver = {
-    ip = "192.168.1.103",
+    ip = "192.168.23.128",
     port = 9777,
 }
 
 -- get from server
 local gameserver = {
-    addr = "192.168.1.103",
+    addr = "192.168.23.128",
     port = 9555,
     name = "gameserver",
 }
 
-local host = sproto.new (login_proto.s2c):host "package"
-local request = host:attach (sproto.new (login_proto.c2s))
 
 local function send_message (msg)
     -- print("--- send_message, len:", #msg)
@@ -107,7 +104,7 @@ function RESPONSE.rpc_client_user_info (args)
     -- send_request ("rpc_server_rank_info", tmpTab)
     -- end
 
-    local time = Scheduler:scheduleScriptFunc(testCrash, 0.5, false)
+    -- local time = Scheduler:scheduleScriptFunc(testCrash, 0.5, false)
 
 end
 
@@ -225,7 +222,7 @@ function RpcMgr.connGameServer()
     local msg = ret and "connect gameserver success" or "connect gameserver fail"
     print("--- ", msg)
     if ret then
-        send_request ("rpc_server_login_gameserver", { session = user.session, token = user.token })
+        -- send_request ("rpc_server_login_gameserver", { session = user.session, token = user.token })
 
         -- host = sproto.new (game_proto.s2c):host "package"
         -- request = host:attach (sproto.new (game_proto.c2s))
