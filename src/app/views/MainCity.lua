@@ -62,7 +62,7 @@ function MainCity:regWiget()
             end
 
             -- rpcMgr.send_request("gm", { data = inputStr })
-            rpcMgr.send_request ("rpc_server_world_chat", {msg = inputStr})
+            rpcMgr.send_request ("rpc_svr_chat", {msg = inputStr, flag = 3 })
         end
     end
 

@@ -1,4 +1,5 @@
 local Tips = require("util.Tips")
+local Scheduler = cc.Director:getInstance():getScheduler()
 
 local LoginLayer = class("LoginLayer", function ()
     return cc.Layer:create()
@@ -10,6 +11,11 @@ function LoginLayer:ctor( ... )
     self:initUI()
 end
 
+function LoginLayer:callback()
+    Scheduler:unscheduleScriptEntry(self._loginEntry)
+    self:autoLogin()
+end
+
 function LoginLayer:initUI( ... )
     local uipath = "DemoLogin/DemoLogin.json"
     print("------ load json:"..uipath)
@@ -19,8 +25,12 @@ function LoginLayer:initUI( ... )
     self._widget:setAnchorPoint(cc.p(0.5, 0.5))
     self._widget:move(display.center)
     self:regWiget()
-  --  self:autoLogin()
+   -- self:autoLogin()
+
+    -- self._loginEntry = Scheduler:scheduleScriptFunc(function() self:callback() end, 1, false)
 end
+
+
 
 function LoginLayer:regWiget()
     local function onClose(sender, eventType)
@@ -76,6 +86,7 @@ function LoginLayer:autoLogin()
     self.bConnect = rpcMgr.connect()
     assert(self.bConnect, "loginServer connect fail 111")
     rpcMgr.login(info.username, info.password)
+    -- rpcMgr.login("aaa", "bbb")
 end
 
 return LoginLayer

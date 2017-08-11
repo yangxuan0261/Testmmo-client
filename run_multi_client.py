@@ -12,7 +12,7 @@ import platform
 
 SelfPath = os.getcwd()
 counter = 1 
-total = 3 # 执行次数
+total = 7 # 执行次数
 
 
 def ExecFunc():
@@ -36,7 +36,7 @@ def StartTimer(interval):
     pass
 
 def main():
-    StartTimer(3)
+    StartTimer(1)
     pass
 
 if __name__ == '__main__':
